@@ -6,9 +6,9 @@ tags: ["cowork", "tutorial", "first-saas"]
 draft: false
 ---
 
-You're reading the result. The blog itself, every line of CSS, every Astro template, the GitHub repo it lives in, the Cloudflare Pages deploy — all of it was driven by Claude Cowork on the other side of a chat window. I told it I wanted a blog. It produced files, drove my Chrome to set up accounts where it could, and told me which buttons I had to click myself.
+I used Claude Cowork to build this blog. I picked the niche, the voice, the structure, and what I wanted the whole thing to feel like. Cowork wrote the code. This post is about what that actually looked like, and the places where Cowork's limits forced me to make real choices.
 
-I want to be honest about the actual experience because most "I built X in Y minutes with AI" posts are scripted. This one wasn't.
+Most "I built X in Y minutes with AI" posts are scripted. This one isn't.
 
 ## The wall-clock truth
 
