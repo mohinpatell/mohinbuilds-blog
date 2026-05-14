@@ -1,0 +1,33 @@
+---
+import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  return posts.map(post => ({
+    params: { slug: post.slug },
+    props: post,
+  }));
+}
+
+type Props = CollectionEntry<'blog'>;
+const post = Astro.props;
+const { Content } = await post.render();
+---
+<Layout title={`${post.data.title} — mohinbuilds`} description={post.data.description}>
+  <article>
+    <h1>{post.data.title}</h1>
+    <p>
+      <time datetime={post.data.publishDate.toISOString()}>
+        {post.data.publishDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+      </time>
+      {post.data.updatedDate && (
+        <span> · Updated <time datetime={post.data.updatedDate.toISOString()}>
+          {post.data.updatedDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+        </time></span>
+      )}
+    </p>
+    <Content />
+  </article>
+</Layout>
