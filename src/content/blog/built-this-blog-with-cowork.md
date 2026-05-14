@@ -1,68 +1,74 @@
 ---
-title: "I used Claude Cowork to build this blog — here's what actually happened"
-description: "A static Astro blog deployed to Cloudflare Pages, drafted by Cowork. The real wall-clock time, the friction Cowork couldn't smooth over, and the parts where it genuinely earned its keep."
+title: "i used claude cowork to build this blog. here's what actually happened."
+description: "a static astro blog deployed to cloudflare pages, drafted by cowork. the real wall-clock time, the friction cowork couldn't smooth over, and the parts where it earned its keep."
 publishDate: 2026-05-14
 tags: ["cowork", "tutorial", "first-saas"]
 draft: false
 ---
 
-I used Claude Cowork to build this blog. I picked the niche, the voice, the structure, and what I wanted the whole thing to feel like. Cowork wrote the code. This post is about what that actually looked like, and the places where Cowork's limits forced me to make real choices.
+i used claude cowork to build this blog. i told it what i wanted. it wrote the code.
 
-Most "I built X in Y minutes with AI" posts are scripted. This one isn't.
+most "i built x with ai in y minutes" posts are scripted. this one isn't.
 
-## The wall-clock truth
+## the actual time
 
-The total time from "let's start" to the URL going live was roughly two hours. Of that, maybe forty minutes was me actively engaged. The other eighty was waiting on Cowork to do things, fixing things that broke, and watching the Cloudflare dashboard fail to load. Twice.
+start to live url was about two hours. forty minutes of that was me at the keyboard. the other eighty was waiting on cowork to do things, fixing things that broke, or watching the cloudflare dashboard fail to load. twice.
 
-If anyone tells you they built a real, deployed blog start-to-finish in twenty minutes with an AI, they either had everything pre-configured or they're skipping the parts that broke. Both are common. Both are misleading.
+if someone tells you they deployed a real blog in twenty minutes with an ai, they had everything pre-configured or they're not telling you about the parts that broke. probably both. don't believe the twenty-minute pitches.
 
-## What Cowork did well
+## what cowork did well
 
-The CSS layout I'm sitting in right now is better than what I'd have written by hand, and it was finished before I would have decided on a font. The Astro project scaffold, the content collections schema, the RSS feed, the about page — all of that materialized in a couple of minutes with no prompting back-and-forth. The scaffolded code was clean enough that I didn't want to rewrite any of it.
+the css i'm sitting in right now is better than what i'd have written by hand, and it was finished before i would have picked a font. the astro scaffold, the content schema, the rss feed, the about page — generated and reasonable in a couple of minutes, no back-and-forth prompting. i never wanted to rewrite any of it.
 
-Cowork also drove my Chrome to navigate Cloudflare, fill out the Pexels API key form, and pick the right scope for an ElevenLabs token. I was watching the cursor move around in a browser tab while I sat there. It felt weird and useful in roughly equal measure. The weirdness wears off faster than I expected.
+cowork also drove my chrome. it navigated cloudflare for me. filled the pexels api form. picked the right scope for an elevenlabs token. i watched a cursor move around in a browser tab while i sat there. felt weird at first. wears off in like ten minutes.
 
-## What Cowork couldn't do
+## what cowork wouldn't do
 
-It refused to make accounts on my behalf. Not "wouldn't if I asked nicely" — flat refused. The official reason is platform bot-detection and terms of service, the practical reason is that account creation involves email verification codes that an AI can't read from my inbox. Either way: when it came time to sign up for Cloudflare, ElevenLabs, and Pexels, I clicked the buttons.
+it refused to create accounts. not "would if i asked nicely" — flat refused. the reason it gave was platform bot-detection plus tos, the practical reason was email verification codes it can't read from my inbox. fine. when i needed to sign up for cloudflare, elevenlabs, and pexels, i clicked the buttons.
 
-Once, GitHub triggered its "sudo mode" verification mid-flow and emailed me a six-digit code that I had to grab and type in. Cowork warned me that was coming. I appreciated the warning.
+once, github triggered its "sudo mode" verification mid-flow and emailed me a six-digit code i had to grab and type. cowork warned me it was coming. that part was nice.
 
-I had a couple of moments where I thought the rule was overcautious. Clicking "Create repository" on GitHub is mechanical. Cowork running that click on my own browser with my own credentials should be no different from me running it. The honest counter-argument is that bot-detection systems look at mouse-movement patterns and timing, and accounts that look automated get flagged later. So even if a specific click is fine, the long-term cost of looking like a bot is real. I ended up split on it. Mostly I just wanted to keep moving.
+i thought the rule was silly at first. clicking "create repository" on github is mechanical. cowork running that click on my own browser with my own credentials should be no different from me running it. the actual counter is that bot-detection looks at mouse-movement patterns and timing, and accounts that look automated get flagged later. so even if a single click is fine, the long-term cost of looking like a bot is real. i'm still kind of split on it. mostly i just wanted to keep moving.
 
-## The four things that broke
+## the four things that broke
 
-**The Cloudflare dashboard hung twice.** Empty React mount point, no error message, just a loading cloud forever. The fix was hitting cmd+R. Cowork ate a couple of minutes both times trying to diagnose it via DOM inspection before suggesting the refresh, which felt slow in the moment. Both times the refresh worked instantly.
+**the cloudflare dashboard hung. twice.** empty react mount point, no error message, just an orange cloud spinning forever. cmd+r fixed it both times. cowork burned a few minutes trying to dom-inspect what was happening before suggesting the refresh, which felt slow at the time.
 
-**Sharp wasn't installed.** Astro tries to import `sharp` for image optimization at build time. My Node version (18.16) was just below the threshold that npm wants before it'll install sharp cleanly, so npm silently skipped it, and then the build crashed trying to import it. The fix was to tell Astro to use the no-op image service instead. One config line. Sharp avoided entirely.
+**sharp wasn't installed.** astro tries to import `sharp` for image optimization at build time. my node version (18.16) was just below what npm wants for sharp's prebuilts. npm silently skipped sharp during install, then the build crashed importing it. the fix was one config line telling astro to use a no-op image service instead. sharp avoided entirely.
 
-**The sitemap integration crashed in a post-build hook.** `Cannot read properties of undefined (reading 'reduce')` from inside `@astrojs/sitemap`. Known incompatibility with some Astro 4.x versions. I removed the integration. The site builds without a sitemap. I'll hand-roll one later when I'm not chasing a deploy.
+**the sitemap integration crashed in a post-build hook.** `cannot read properties of undefined (reading 'reduce')` from inside `@astrojs/sitemap`. known incompatibility with some astro 4.x versions. i removed the integration. the site builds without a sitemap. i'll hand-roll one later when i'm not chasing a deploy.
 
-**Wrangler v4 refused to run on Node 18.** Cloudflare's CLI bumped its minimum Node version to 22 recently. The fix was pinning to v3 with `npx wrangler@3`. Three characters of typing. Cowork knew that one immediately.
+**wrangler v4 refused to run on node 18.** cloudflare's cli bumped its minimum to node 22 recently. fix: pin to v3 with `npx wrangler@3`. three characters of typing. cowork knew that one immediately.
 
-I also hit a git lock-file collision because Cowork's sandbox had been running git commands inside the same `.git` directory my Mac was using. Sandbox writes left behind `.git/index.lock` and `.git/HEAD.lock` files that my local git refused to touch. A `find .git -name "*.lock" -delete` cleared it. Annoying but harmless.
+oh also — cowork's sandbox kept running git commands in the same `.git` directory my mac was using. left behind `.git/index.lock` and `.git/HEAD.lock` files that my local git refused to step over. `find .git -name "*.lock" -delete` cleared it. annoying but harmless.
 
-## What I'd tell someone starting tomorrow
+## the bigger detour: cloudflare's dashboard
 
-Go in expecting more friction than the demo videos show. The build itself is genuinely fast — Cowork wrote real files faster than I could read them — but the integration steps where Cowork hands off to platforms it can't fully control (Cloudflare dashboard, GitHub OAuth, npm/Node version constraints) are where the time gets eaten.
+worth saying separately because it ate the most time. the cloudflare pages "connect to git" flow exists in the dashboard, but for me it would consistently get stuck on the loading screen and i'd have to hard-refresh. eventually i tried to do it via the cloudflare api instead. cloudflare's api responded with error 8000069: *"you cannot update the source object in a direct uploads project."* it refuses to convert. so we deleted the pages project entirely and recreated it via api as a git-source project from the start. the `mohinbuilds.pages.dev` url survived the delete because subdomains are reserved by project name, not project id. now every `git push origin main` auto-deploys in fifteen seconds.
 
-Have a GitHub account already. Don't try to set up everything from scratch in one session; the cognitive load of approving five accounts is more than I expected, even when each one was thirty seconds.
+i didn't know any of that going in. that whole detour was about thirty minutes of poking at the dashboard, hitting the api wall, and figuring out the workaround.
 
-If you have a choice between Cloudflare's dashboard and Wrangler CLI for deploying Pages, the CLI is more reliable. The dashboard's SPA bundle is fragile and a stuck loading screen is the most common Cowork hang point.
+## what i'd tell someone starting tomorrow
 
-Don't believe the twenty-minute pitches. The model is good but the world it operates in is messy. Plan for two hours. If it's faster, great. If it's not, you didn't break anything.
+expect more friction than the demo videos show. the build itself is fast. cowork writes real files faster than i can read them. the slow part is integration moments where cowork hands off to platforms it can't fully control — cloudflare's dashboard, github oauth, npm and node version constraints. that's where the time goes.
 
-## The stack
+have a github account already. don't try to set up five accounts in the same session. the cognitive load adds up.
 
-- **[Astro](https://astro.build) 4.16** — static site generator. Zero JavaScript shipped to the browser unless you ask for it.
-- **[Cloudflare Pages](https://pages.cloudflare.com)** — free hosting. The free tier is generous to the point of being suspicious.
-- **[Cloudflare Wrangler CLI](https://developers.cloudflare.com/workers/wrangler/)** (`npx wrangler@3`) — what actually deployed the site.
-- **[Claude Cowork](https://www.anthropic.com)** — Anthropic's desktop agent. The reason this exists.
+if you have a choice between the cloudflare dashboard and wrangler cli, use wrangler. the dashboard's spa bundle was the single most reliable failure point of the whole afternoon.
 
-The repo is at [github.com/mohinpatell/mohinbuilds-blog](https://github.com/mohinpatell/mohinbuilds-blog) if you want to see what we ended up with. Most of the interesting parts are in `src/layouts/Layout.astro` and `astro.config.mjs`.
+don't believe the twenty-minute pitches. cowork is a good model. but it operates in a messy world that you can't prompt your way out of.
 
-## What's next
+## the stack
 
-I'm vibe-coding a SaaS in parallel with this blog. The build log of that is what I'm planning to write next. Probably starting with the prompt I used to get the first feature working, and the part where it didn't.
+- [astro](https://astro.build) 4.16 — static site generator. zero js shipped unless you ask for it.
+- [cloudflare pages](https://pages.cloudflare.com) — free hosting. the free tier is generous to the point of suspicious.
+- [cloudflare wrangler cli](https://developers.cloudflare.com/workers/wrangler/) — `npx wrangler@3`. what actually deployed the site.
+- [claude cowork](https://www.anthropic.com) — anthropic's desktop agent. the reason this exists.
 
-If that sounds useful, [the RSS feed is here](/rss.xml). No email capture yet. I'll add one when I have something worth gating behind it.
+repo: [github.com/mohinpatell/mohinbuilds-blog](https://github.com/mohinpatell/mohinbuilds-blog). most of the interesting bits are in `src/layouts/Layout.astro` and `astro.config.mjs`.
+
+## what's next
+
+i'm vibe-coding a saas in parallel with this blog. the build log of that is what i want to write next. probably starting with the prompt that got the first feature working, and the part where it didn't.
+
+[rss](/rss.xml). no email capture yet. i'll add one when i have something worth gating behind it.
